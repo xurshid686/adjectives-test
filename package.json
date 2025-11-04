@@ -7,9 +7,6 @@
     "dev": "python -m http.server 3000",
     "build": "echo 'Build completed'"
   },
-  "dependencies": {
-    "node-fetch": "^2.6.7"
-  },
   "keywords": ["english", "adjectives", "degrees", "test", "education", "comparative", "superlative"],
   "author": "xurshid686",
   "license": "MIT"
