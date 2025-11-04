@@ -522,7 +522,11 @@
             try {
                 statusElement.innerHTML = '<div class="telegram-status">Sending results to Telegram...</div>';
                 
-                const response = await fetch('/api/telegram', {
+                // Use current domain for API call
+                const apiUrl = window.location.origin + '/api/telegram';
+                console.log('Sending to:', apiUrl);
+                
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -531,6 +535,7 @@
                 });
 
                 const result = await response.json();
+                console.log('API Response:', result);
                 
                 if (result.success) {
                     statusElement.innerHTML = '<div class="telegram-status telegram-success">✅ Results sent to Telegram successfully!</div>';
@@ -538,7 +543,8 @@
                     statusElement.innerHTML = `<div class="telegram-status telegram-error">❌ Failed to send to Telegram: ${result.error}</div>`;
                 }
             } catch (error) {
-                statusElement.innerHTML = `<div class="telegram-status telegram-error">❌ Error sending to Telegram: ${error.message}</div>`;
+                console.error('Fetch error:', error);
+                statusElement.innerHTML = `<div class="telegram-status telegram-error">❌ Network error: ${error.message}</div>`;
             }
         }
 
