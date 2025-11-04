@@ -1,0 +1,13 @@
+{
+  "name": "adjectives-degrees-test",
+  "version": "1.0.0",
+  "description": "English Adjectives Test - Comparative and Superlative Degrees",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "build": "echo 'Build completed'"
+  },
+  "keywords": ["english", "adjectives", "degrees", "test", "education", "comparative", "superlative"],
+  "author": "xurshid686",
+  "license": "MIT"
+}
