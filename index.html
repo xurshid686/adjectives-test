@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjectives & Degrees Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .question-container {
+            text-align: left;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background-color: #667eea;
+            color: white;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .results {
+            text-align: center;
+        }
+
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .result-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .detailed-results {
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .result-item {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid;
+        }
+
+        .correct {
+            background-color: #f0fff4;
+            border-left-color: #48bb78;
+        }
+
+        .incorrect {
+            background-color: #fff5f5;
+            border-left-color: #f56565;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .user-info {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .telegram-status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .telegram-success {
+            background-color: #f0fff4;
+            color: #2d3748;
+            border: 1px solid #48bb78;
+        }
+
+        .telegram-error {
+            background-color: #fff5f5;
+            color: #2d3748;
+            border: 1px solid #f56565;
+        }
+
+        .degree-type {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div id="loginScreen">
+            <h1>Adjectives & Degrees Test</h1>
+            <p class="subtitle">Comparative and Superlative Forms</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="input-group">
+                    <label for="surname">Surname:</label>
+                    <input type="text" id="surname" required>
+                </div>
+                <button type="submit" class="btn">Start Test</button>
+            </form>
+        </div>
+
+        <!-- Test Screen -->
+        <div id="testScreen" class="hidden">
+            <div class="user-info">
+                Student: <span id="userDisplay"></span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+            <div class="question-container">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="hidden">
+            <h1>Test Results</h1>
+            <div class="user-info">
+                Student: <span id="resultUserDisplay"></span>
+            </div>
+            <div class="score" id="finalScore"></div>
+            <div class="result-text" id="resultText"></div>
+            <div id="telegramStatus"></div>
+            <div class="detailed-results" id="detailedResults"></div>
+            <button class="btn" onclick="restartTest()">Take Test Again</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                id: 1,
+                question: "My brother is ___ than me.",
+                options: ["tall", "taller", "tallest"],
+                correct: "taller",
+                type: "Comparative"
+            },
+            {
+                id: 2,
+                question: "This is the ___ book I've ever read.",
+                options: ["interesting", "more interesting", "most interesting"],
+                correct: "most interesting",
+                type: "Superlative"
+            },
+            {
+                id: 3,
+                question: "Her dress is ___ than mine.",
+                options: ["beautiful", "more beautiful", "most beautiful"],
+                correct: "more beautiful",
+                type: "Comparative"
+            },
+            {
+                id: 4,
+                question: "That was the ___ movie of the year.",
+                options: ["good", "better", "best"],
+                correct: "best",
+                type: "Superlative"
+            },
+            {
+                id: 5,
+                question: "Today is ___ than yesterday.",
+                options: ["cold", "colder", "coldest"],
+                correct: "colder",
+                type: "Comparative"
+            },
+            {
+                id: 6,
+                question: "Mount Everest is the ___ mountain in the world.",
+                options: ["high", "higher", "highest"],
+                correct: "highest",
+                type: "Superlative"
+            },
+            {
+                id: 7,
+                question: "This exercise is ___ than the previous one.",
+                options: ["difficult", "more difficult", "most difficult"],
+                correct: "more difficult",
+                type: "Comparative"
+            },
+            {
+                id: 8,
+                question: "She is the ___ student in our class.",
+                options: ["intelligent", "more intelligent", "most intelligent"],
+                correct: "most intelligent",
+                type: "Superlative"
+            },
+            {
+                id: 9,
+                question: "My new phone is ___ than my old one.",
+                options: ["expensive", "more expensive", "most expensive"],
+                correct: "more expensive",
+                type: "Comparative"
+            },
+            {
+                id: 10,
+                question: "This is the ___ day of my life!",
+                options: ["happy", "happier", "happiest"],
+                correct: "happiest",
+                type: "Superlative"
+            },
+            {
+                id: 11,
+                question: "The weather is getting ___ every day.",
+                options: ["bad", "worse", "worst"],
+                correct: "worse",
+                type: "Comparative"
+            },
+            {
+                id: 12,
+                question: "That was the ___ joke I've ever heard.",
+                options: ["funny", "funnier", "funniest"],
+                correct: "funniest",
+                type: "Superlative"
+            },
+            {
+                id: 13,
+                question: "This road is ___ than that one.",
+                options: ["dangerous", "more dangerous", "most dangerous"],
+                correct: "more dangerous",
+                type: "Comparative"
+            },
+            {
+                id: 14,
+                question: "He is the ___ person I know.",
+                options: ["kind", "kinder", "kindest"],
+                correct: "kindest",
+                type: "Superlative"
+            },
+            {
+                id: 15,
+                question: "Her English is ___ than mine.",
+                options: ["good", "better", "best"],
+                correct: "better",
+                type: "Comparative"
+            },
+            {
+                id: 16,
+                question: "This is the ___ building in the city.",
+                options: ["old", "older", "oldest"],
+                correct: "oldest",
+                type: "Superlative"
+            },
+            {
+                id: 17,
+                question: "The test was ___ than I expected.",
+                options: ["easy", "easier", "easiest"],
+                correct: "easier",
+                type: "Comparative"
+            },
+            {
+                id: 18,
+                question: "That's the ___ solution to the problem.",
+                options: ["simple", "simpler", "simplest"],
+                correct: "simplest",
+                type: "Superlative"
+            },
+            {
+                id: 19,
+                question: "This coffee is ___ than that one.",
+                options: ["hot", "hotter", "hottest"],
+                correct: "hotter",
+                type: "Comparative"
+            },
+            {
+                id: 20,
+                question: "It was the ___ moment of the game.",
+                options: ["exciting", "more exciting", "most exciting"],
+                correct: "most exciting",
+                type: "Superlative"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let userName = '';
+        let userSurname = '';
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            userName = document.getElementById('name').value.trim();
+            userSurname = document.getElementById('surname').value.trim();
+            
+            if (userName && userSurname) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('testScreen').classList.remove('hidden');
+                document.getElementById('userDisplay').textContent = `${userName} ${userSurname}`;
+                loadQuestion();
+            }
+        });
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            document.getElementById('questionText').textContent = question.question;
+            
+            const progress = ((currentQuestion) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectOption(option, optionElement);
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        function selectOption(selectedOption, element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store answer
+            userAnswers[currentQuestion] = {
+                questionId: questions[currentQuestion].id,
+                selected: selectedOption,
+                correct: questions[currentQuestion].correct,
+                isCorrect: selectedOption === questions[currentQuestion].correct,
+                type: questions[currentQuestion].type
+            };
+            
+            // Move to next question after 1 second
+            setTimeout(() => {
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    loadQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1000);
+        }
+
+        async function showResults() {
+            document.getElementById('testScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+            
+            const correctAnswers = userAnswers.filter(answer => answer.isCorrect).length;
+            const totalQuestions = questions.length;
+            const score = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            document.getElementById('resultUserDisplay').textContent = `${userName} ${userSurname}`;
+            document.getElementById('finalScore').textContent = `${score}%`;
+            document.getElementById('resultText').textContent = `You got ${correctAnswers} out of ${totalQuestions} questions correct!`;
+            
+            const detailedResults = document.getElementById('detailedResults');
+            detailedResults.innerHTML = '<h3>Detailed Results:</h3>';
+            
+            userAnswers.forEach((answer, index) => {
+                const resultItem = document.createElement('div');
+                resultItem.className = `result-item ${answer.isCorrect ? 'correct' : 'incorrect'}`;
+                resultItem.innerHTML = `
+                    <strong>Q${index + 1}:</strong> ${questions[index].question}<br>
+                    Your answer: "${answer.selected}" ${!answer.isCorrect ? `<br>Correct answer: "${answer.correct}"` : ''}
+                    <div class="degree-type">Degree: ${answer.type}</div>
+                `;
+                detailedResults.appendChild(resultItem);
+            });
+            
+            await sendResultsToTelegram(correctAnswers, totalQuestions, score);
+        }
+
+        async function sendResultsToTelegram(correct, total, score) {
+            const messageData = {
+                name: userName,
+                surname: userSurname,
+                correctAnswers: correct,
+                totalQuestions: total,
+                score: score,
+                answers: userAnswers,
+                questions: questions
+            };
+
+            const statusElement = document.getElementById('telegramStatus');
+            
+            try {
+                statusElement.innerHTML = '<div class="telegram-status">Sending results to Telegram...</div>';
+                
+                const response = await fetch('/api/telegram', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(messageData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusElement.innerHTML = '<div class="telegram-status telegram-success">✅ Results sent to Telegram successfully!</div>';
+                } else {
+                    statusElement.innerHTML = `<div class="telegram-status telegram-error">❌ Failed to send to Telegram: ${result.error}</div>`;
+                }
+            } catch (error) {
+                statusElement.innerHTML = `<div class="telegram-status telegram-error">❌ Error sending to Telegram: ${error.message}</div>`;
+            }
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            userAnswers = [];
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('name').value = '';
+            document.getElementById('surname').value = '';
+            document.getElementById('telegramStatus').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
