@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     try {
       const { name, surname, correctAnswers, totalQuestions, score, answers, questions } = req.body;
       
-      console.log('Received data:', { name, surname, correctAnswers, totalQuestions, score });
+      console.log('Received data for Telegram:', { name, surname, correctAnswers, totalQuestions, score });
 
       // Format the message
       const message = `
@@ -25,7 +25,6 @@ export default async function handler(req, res) {
 
 *Detailed Results:*
 ${answers.map((answer, index) => {
-  const question = questions.find(q => q.id === answer.questionId);
   return `Q${index + 1}: ${answer.isCorrect ? '✅' : '❌'} - Your answer: "${answer.selected}" ${!answer.isCorrect ? `(Correct: "${answer.correct}")` : ''}`;
 }).join('\n')}
 
@@ -37,11 +36,14 @@ ${answers.map((answer, index) => {
       const botToken = process.env.TELEGRAM_BOT_TOKEN;
       const chatId = process.env.TELEGRAM_CHAT_ID;
 
+      console.log('Bot Token exists:', !!botToken);
+      console.log('Chat ID exists:', !!chatId);
+
       if (!botToken || !chatId) {
         console.error('Telegram credentials missing');
         return res.status(500).json({ 
           success: false, 
-          error: 'Telegram credentials not configured' 
+          error: 'Telegram credentials not configured in environment variables' 
         });
       }
 
@@ -60,7 +62,7 @@ ${answers.map((answer, index) => {
       });
 
       const result = await telegramResponse.json();
-      console.log('Telegram response:', result);
+      console.log('Telegram API response:', result);
 
       if (result.ok) {
         res.status(200).json({ 
@@ -68,9 +70,10 @@ ${answers.map((answer, index) => {
           message: 'Results sent to Telegram successfully' 
         });
       } else {
+        console.error('Telegram API error:', result);
         res.status(500).json({ 
           success: false, 
-          error: result.description 
+          error: result.description || 'Unknown Telegram API error'
         });
       }
     } catch (error) {
